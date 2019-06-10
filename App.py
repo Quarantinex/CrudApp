@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_mysql_html import pymysql
+import xlrd
 
 connection = pymysql.connect(host='localhost',
                              user='root',
@@ -29,10 +30,29 @@ def insert():
         name = request.form['Name']
         email = request.form['Email']
         mobile = request.form['Mobile']
-        with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO employees(Id, Name, Email, Mobile) VALUES (%s, %s, %s, %s)", (emp, name, email, mobile))
-            connection.commit()
+        cursor = connection.cursor()
+        cursor.execute("INSERT INTO employees(Id, Name, Email, Mobile) VALUES (%s, %s, %s, %s)", (emp, name, email, mobile))
+        connection.commit()
         return redirect(url_for('index'))
+
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    if request.method == "POST":
+        flash("Data Inserted Successfully")
+        file = request.form['File']
+        book = xlrd.open_workbook(file)
+        sheet = book.sheet_by_name("Sheet1")
+        for r in range(1, sheet.nrows):
+            emp = sheet.cell(r, 0).value
+            name = sheet.cell(r, 1).value
+            email = sheet.cell(r, 2).value
+            mobile = sheet.cell(r, 3).value
+            cursor = connection.cursor()
+            cursor.execute("INSERT INTO employees(Id, Name, Email, Mobile) VALUES (%s, %s, %s, %s)",
+                           (emp, name, email, mobile))
+            connection.commit()
+            return redirect(url_for('index'))
 
 
 @app.route('/update', methods={'POST', 'GET'})

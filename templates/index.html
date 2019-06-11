@@ -13,19 +13,19 @@
   </head>
   <body>
     {% block body %}
-    <div class="container">
+    <div class="jumbotron">
       <div class="well text-center">
-        <h1>CRUD for Employee Data</h1>
+        <h3>CRUD for Employee Data</h3>
       </div>
 
-      <div class="container">
+      <div class="jumbotron">
         <div class="row">
           <div class="col md-12">
-            <h2>
+            <h5>
               Employee List
               <button
                 type="button"
-                class="btn btn-primary"
+                class="btn btn-primary float-right btn-sm"
                 data-toggle="modal"
                 data-target="#myModalup"
               >
@@ -33,16 +33,16 @@
               </button>
               <button
                 type="button"
-                class="btn btn-success  pull-right"
+                class="btn btn-success  float-right btn-sm"
                 data-toggle="modal"
                 data-target="#myModal"
               >
                 Add Employee Data
               </button>
-            </h2>
+            </h5>
             {%with messages = get_flashed_messages()%} {%if messages%} {%for
             message in messages%}
-            <div class="alert alert-success alert-dismissable" role="alert">
+            <div class="alert alert-dismissible alert-success" role="alert">
               <button
                 type="button"
                 class="close"
@@ -54,15 +54,17 @@
               {{ message }}
             </div>
             {%endfor%} {%endif%} {%endwith%}
-            <table class="table table-striped">
-              <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Mobile</th>
-              </tr>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Id</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Mobile</th>
+                </tr>
+              </thead>
               {%for row in employees%}
-              <tr>
+              <tr class="table-dark">
                 <td>{{ row["Id"] }}</td>
                 <td>{{ row["Name"] }}</td>
                 <td>{{ row["Email"] }}</td>
@@ -70,14 +72,14 @@
                 <td>
                   <a
                     href="/update/{{ row['Id'] }}"
-                    class="btn btn-warning btn-xs"
+                    class="badge badge-pill badge-warning"
                     data-toggle="modal"
                     data-target="#modaledit{{ row['Id'] }}"
                     >Edit</a
                   >
                   <a
                     href="/delete/{{ row['Id'] }}"
-                    class="btn btn-danger btn-xs"
+                    class="badge badge-pill badge-danger"
                     onclick="return confirm('Are You Sure For Delete?')"
                     >Delete</a
                   >
@@ -85,22 +87,21 @@
               </tr>
               <div
                 id="modaledit{{ row['Id'] }}"
-                class="modal fade"
-                tabindex="-1"
-                role="dialog"
+                class="modal"
               >
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal">
-                        &times;
-                      </button>
                       <h4 class="modal-title">Update Information</h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
                     </div>
                     <div class="modal-body">
                       <form action="{{ url_for('update') }}" method="POST">
-                        <div class="form-group row">
-                          <label>Name:</label>
+
+                        <div class="form-group">
+                          <label for="formGroupExampleName">Name:</label>
                           <input
                             type="hidden"
                             name="Id"
@@ -109,22 +110,27 @@
                           <input
                             type="text"
                             class="form-control"
+                            id="formGroupExampleName"
+                            placeholder="Full Name"
                             name="Name"
                             value="{{ row['Name'] }}"
                           />
                         </div>
                         <div class="form-group">
-                          <label>Email:</label>
+                          <label for="formGroupExampleEmail">Email:</label>
                           <input
+                            id="formGroupExampleEmail"
                             type="email"
+                            placeholder="somebody@somewhere.dot"
                             class="form-control"
                             name="Email"
                             value="{{ row['Email'] }}"
                           />
                         </div>
                         <div class="form-group">
-                          <label>Phone:</label>
+                          <label for="formGroupExamplePhone">Phone:</label>
                           <input
+                            id="formGroupExamplePhone"
                             type="tel"
                             pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                             placeholder="xxx-xxx-xxxx"
@@ -140,15 +146,6 @@
                         </div>
                       </form>
                     </div>
-                    <div class="modal-footer">
-                      <button
-                        type="button"
-                        class="btn btn-default"
-                        data-dismiss="modal"
-                      >
-                        Close
-                      </button>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -157,14 +154,14 @@
             </table>
           </div>
           <!-- Modal -->
-          <div id="myModalup" class="modal fade" role="dialog">
-            <div class="modal-dialog">
+          <div id="myModalup" class="modal">
+            <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">
-                    &times;
-                  </button>
                   <h4 class="modal-title">Please Insert Data</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
                 <div class="modal-body">
                   <form action="{{ url_for('upload') }}" method="POST">
@@ -187,14 +184,14 @@
               </div>
             </div>
           </div>
-          <div id="myModal" class="modal fade" role="dialog">
-            <div class="modal-dialog">
+          <div id="myModal" class="modal">
+            <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal">
-                    &times;
-                  </button>
                   <h4 class="modal-title">Please Insert Data</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                  </button>
                 </div>
                 <div class="modal-body">
                   <form action="{{ url_for('insert') }}" method="POST">
@@ -203,6 +200,7 @@
                       <input
                         type="number"
                         class="form-control"
+                        placeholder="Enter Your Employee Id"
                         name="Id"
                         required="1"
                       />
@@ -210,6 +208,7 @@
                     <div class="form-group">
                       <label>Name:</label>
                       <input
+                        placeholder="Enter Your Full Name"
                         type="text"
                         class="form-control"
                         name="Name"
@@ -220,6 +219,7 @@
                       <label>Email:</label>
                       <input
                         type="email"
+                        placeholder="Somebody@Somewhere.dot"
                         class="form-control"
                         name="Email"
                         required="1"
@@ -243,15 +243,6 @@
                     </div>
                   </form>
                 </div>
-                <div class="modal-footer">
-                  <button
-                    type="button"
-                    class="btn btn-default"
-                    data-dismiss="modal"
-                  >
-                    Close
-                  </button>
-                </div>
               </div>
             </div>
           </div>
@@ -261,7 +252,7 @@
       <div class="well">
         <h3>
           Website: www.Dell.com
-          <span class="pull-right">Like Us: www.facebook.com</span>
+          <span class="float-right">Like Us: www.facebook.com</span>
         </h3>
       </div>
     </div>
